@@ -74,3 +74,84 @@ const App: FC = () => (
 );
 ```
 初回のマッチでルーチンを抜けるため、複数マッチのリスクを回避できるため、RouteとSwitchはセットで使うべき
+
+* リダイレクトを実行するためのRedirectコンポーネント
+```ts
+import { Redirect, Route, Switch } from 'react-router';
+
+const App: FC = () => (
+  <Switch>
+    <Route exact path="/" component={Home} />
+    <Redirect from="/user/profile/:userId" to="/user/:userId" />   
+    <Route path="/user/:userId" component={User} />
+    <Redirect push to="/" />
+  </Switch>
+)
+// fromでマッチングしてtoにリダイレクト
+// fromがなければ問答無用でリダイレクト
+```
+
+* リンク機能を提供するLinkコンポーネント
+```ts
+import { Link } from 'react-router-dom';
+// 省略
+  <ul>
+    <li>
+      <Link to="/">トップページ</Link>
+    </li>
+    <li>
+      <Link to="{{
+        pathname: '/contact',
+        search: '?from=here'
+        hash: '#subject',
+        state: { secretCode: '8yUfa9KECH' },
+      }}">
+        お問い合わせ
+      </Link>
+      <li>
+        <Link to="/anywhere" replace>
+          今ここではないどこか
+        </Link>
+      </li>
+    </li>
+  </ul>
+// 省略
+// aタグはリンクを踏んだ瞬間にReactRouter管轄外となり履歴が消えてしまう
+```
+
+* 4つのHooks API
+  * useHistory
+  ```ts
+  import React, { FC } from 'react'
+  import { useHistory } from 'react-router-dom'
+
+  const historyButtons: FC = () => {
+    const history = useHistory();
+    return (
+    // goBack(): 一つ前に戻るメソッド
+    <button type="button" onClick={() => history.goBack()}>
+    戻る
+    </button>
+    // goForward(): 一つ先に進むメソッド
+    <button type="button" onClick={() => history.goForward()}>
+    進む
+    </button>
+    // push(): 指定パスに移動するメソッド
+    <button type="button" onClick={() => history.push("/")}>
+    トップページへ
+    </button>
+    );
+  };
+
+  export default historyButtons;
+  // その他の要素
+  // length: スタックされている履歴の数
+  // action: 直近に実行されたアクションの種類（push,replace,pop)
+  // replace(): 指定パスにリダイレクトするメソッド（現ページの履歴消える）
+  // go(): 引数で指定した番号の履歴に移動するメソッド
+  ```
+  * useLocation
+  ```ts
+  ```
+  * useParams
+  * useRouteMatch
