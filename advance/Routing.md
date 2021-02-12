@@ -185,5 +185,35 @@ import { Link } from 'react-router-dom';
     key: '1j3qup', // locationオブジェクトごとに生成されるユニークな文字列
   }
   ```
-  * useParams
-  * useRouteMatch
+  * useParams / useRouteMatch
+  ```ts
+  // どちらもmatchオブジェクトをハンドリングするためのAPI
+  import React, { FC } from 'react';
+  import { useParams, useRouteMatch } from 'react-router-dom'
+
+  const User: FC = () => {
+    const { userId } = useParams();
+    const match = useRouteMatch();
+
+    // アクセスしたパスが /user/taku の場合
+    console.log(userId);
+    // taku
+    // matchオブジェクトからURLパラメーターのみを抽出
+    
+    console.log(match); 
+    // {
+    //   path: "/user/:userId",
+    //   url: "/user/taku",
+    //   isExact: true,
+    //   params: {
+    //     userId: "taku",
+    //   }
+    // }
+    // matchオブジェクトをそのまま取得
+    
+    // useRouteMatchでuseParamsと同じことをする場合
+    const match = useRouteMatch();
+    const { userId } = match.params as { userId: string};
+    // useParamsは上記を１行でかける便利なAPI
+  }
+  ```
