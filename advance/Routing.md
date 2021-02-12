@@ -152,6 +152,38 @@ import { Link } from 'react-router-dom';
   ```
   * useLocation
   ```ts
+  import React, { FC, useEffect } from 'react';
+  import { Switch, useLocation } from 'react-router-dom';
+  import ReactGA from 'react-ga';
+
+  const App: FC = () => {
+    const location = useLocation();
+    // locationオブジェクトにはその時点でのURL情報が格納されている
+    // SPAではリクエストがサーバーに行かずGoogleAnalytics等が使えない問題への対応策
+    useEffect(() => {
+      // サーバーへページ情報を送信する処理
+      ReactGA.pageview(location.pathname + location.search);
+    },[location.key])
+
+    return (
+      <Switch>
+        <Route exact path="/" component={Home} />
+        <Route path="/user/:userId" component={User} />
+        <Route component={NotFound} />
+      </Switch>
+    )
+  }
+  // locationオブジェクトの構造
+  // URL: https://example.com/user/taku?from=user-list#friends の例
+  {
+    pathname: '/user/taku',
+    search: '?from=user-list',
+    hash: '#friends',
+    state: {
+    [secretKey]: '9qWV408Zyr',
+    },
+    key: '1j3qup', // locationオブジェクトごとに生成されるユニークな文字列
+  }
   ```
   * useParams
   * useRouteMatch
