@@ -7,3 +7,8 @@ ReactでいうCRAのようにReduxのDXを快適にするもの
 * createReducer: reducerの作成を簡単にしてくれる
 * createAction: action creator を作成する
 * createSlice: actionの定義とaction creater, reducerをまとめて生成できる
+
+実践
+* exampleディレクトリで、Reduxのexampleをtoolkitで書き換え
+* ディレクトリ構造はfeature folderを採用
+* action名もイベントに変更
