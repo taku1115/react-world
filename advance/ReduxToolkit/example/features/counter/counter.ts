@@ -11,7 +11,7 @@ const initialState: CounterState = { count: 0 };
 export const counterSlice = createSlice({
   name: 'counter',
   initialState,
-  reudcer: {
+  reudcers: {
     added: (state, action: payloadAction<number>) => ({
       ...state,
       count: state.count + action.payload,
