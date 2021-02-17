@@ -11,3 +11,5 @@ const [state, dispatch] = useReducer(reducer, initialState);
 * Reduxのようにシングルツリーのオブジェクトに格納して、その中身をreducerによって副作用を排除しつつ更新できる
 
 * useStateの実体は、一つのsetter actionしか持たないuseReducerである
+
+* useReducerは一つのstateごとにちっちゃいReduxのようなものをポコポコ作ってコンポーネントにくっつけているイメージ
