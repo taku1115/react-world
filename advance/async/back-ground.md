@@ -39,6 +39,8 @@ class EnhancedMembers extends Component<{}, { users: User[] }> {
   * Redux Thunk（ダントツトップ）
   * redux-saga（Thunkの3分の1）
   * redux-observable
+
+**< Redux Thunk >**
 * thunkとは、計算の遅延評価の際に引き渡される計算の実体のこと
   * 通常Reduxではプレーンなactionしか渡せない
   * Redux Thunkを組み込めばthunkもdispatcherに渡せるようになる
@@ -69,3 +71,42 @@ class EnhancedMembers extends Component<{}, { users: User[] }> {
   * コールバック地獄に陥りやすい
   * テストが複雑になる
 
+**< redux-saga >**
+  * Thunkと同様、副作用を扱うためのReduxミドルウェア
+  * 純粋なデータフローを残したまま、副作用処理を同期的に記述できる
+  * テストもしやすい
+  * つまり、Thunkの欠点を克服したもの
+* 実際のデータフロー
+    1. 実行させたい副作用を伴う非同期処理を「タスク」として登録しておく
+    1. viewからactionがdispatchされる
+    1. dispatcherがreducerに加えてSagaにもactionを引き渡す
+    1. actionが渡されたらそれに対応するタスクが起動する
+* 非同期処理を同期的に記述する関数「ジェネレータ」
+```ts
+function* stepTo(end, start = 1) {
+  for (let n = start; n < end: n++) {
+    yield n;
+    // yield: 特注仕様のreturnでnext()メソッドで順次実行される
+    // yieldが返す値は {value: any, done: boolean}
+    // yieldががなくなったら {value: undefined, done: true}
+  }
+  yield end * 10;
+} 
+
+const gen = stepTo(3);
+console.log(gen.next()); // Object {value: 1, done: false}
+console.log(gen.next()); // Object {value: 2, done: false}
+console.log(gen.next()); // Object {value: 3, done: false}
+console.log(gen.next()); // Object {value: 30, done: false}
+console.log(gen.next()); // Object {value: undefined, done: true}
+```
+* sagaの Pros and Cons
+  * Pros
+    * 副作用処理をアプリケーションから完全に分離できる
+    * 非同期処理を同期的に書ける
+    * テスタビリティが高い
+  * Cons
+    * コードのボイラープレートが多い
+    * ジェネレータや独自のAPIコールなど、書き方に癖がある
+    * 全体フローや豊富なeffectAPIなど学習コストが高い
+    * ライブラリのバンドルサイズが大きい
