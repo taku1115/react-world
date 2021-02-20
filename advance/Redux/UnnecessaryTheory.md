@@ -40,7 +40,50 @@
 ## Reduxと正面から競合するFacebook製ライブラリ 「Recoil」
 * useStateの中身の状態をグローバルに扱えるようにしたもの
 ```ts
+import React, { FC } from 'react';
+import { atom, useRecoilState } from 'recoil';
 
+const counterState = atom({
+  key: 'counter',
+  defalut: 0,
+});
+// atom: Recoilにおけるstateの単位
+// stateを特定するための'key'とデフォルト値の'defalut'を定義
+
+const CounterBoard: FC = () => {
+  const [count, setCount] = useRecoilState(counterState);
+  // useRecoilState: どのコンポーネントでもatomに対応するstateとsetter関数が取得できる
+  // 上位階層にて、<RecoilRoot>でこのコンポーネントをラップする必要あり
+
+  const increment = () => setCount(c => c + 1);
+
+  return (
+    <>
+      <p>{count}</p>
+      <button onClick={increment}> +1 </button>
+    </>
+  )
+}
+export default CounterBoard;
 ```
+* Reduxはstoreでstateを一元管理するため、任意のstateを参照する際は常にツリー構造を意識
+* 対してRecoilはatomのkeyでstateを特定する、分散管理時代に適している状態管理ライブラリである
+* さらに、今度Reactで導入予定のコンポーネントのレンダリングを並列的に行えるように
+するためのConcurrentモードについても、Reduxはその対応があやぶまれているが、Recoilはすでに対応済み
 
 ## この先Reduxとどう付き合っていくか
+* 時代にふさわしい状態管理の在り方は、APIに対するクエリ単位のキャッシュ
+* しかし、従来のRESTful APIを使う場合は、Reduxの代替としてRecoilはアリ
+* すでにReduxがデファクトスタンダードの長い時代は終わった
+### Reduxと無縁でいることは不可能
+  * 既存のReactアプリケーションはほとんどがReduxとセットになっている
+  * また、既存のプロジェクトのリファクタリングにRedux Toolkitを導入するケースもあり得る
+### Reduxが必要なケース
+  * GUI上でオブジェクトをインタラクティブに取り回せるようにしておきながら、裏でそれらのデ
+ータの整合性をリアルタイムに取りつつ適宜ローカルのストレージやサーバに内容を保存する必要
+があるもkの
+  * 状態の変更履歴を保存しておいて undo / redo できるようにする必要があるもの
+  * 具体的には、ゲームやエディタ、TrelloのようにGUIでぐりぐり動かすアプリなど
+  * React Nativeによるモバイルアプリ
+  * ElectronとReactを組み合わせたデスクトップアプリ
+  * よくあるECサイトやSNS程度ならReduxを使う必要はない
