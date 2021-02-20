@@ -87,3 +87,4 @@ export default CounterBoard;
   * React Nativeによるモバイルアプリ
   * ElectronとReactを組み合わせたデスクトップアプリ
   * よくあるECサイトやSNS程度ならReduxを使う必要はない
+  
